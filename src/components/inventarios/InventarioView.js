@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getInventario } from '../../services/inventarioService'
+import { getInventarios } from '../../services/inventarioService'
 import { Inventariocard } from './Inventariocard'
 import { InventarioNew } from './InventarioNew'
 import Swal from 'sweetalert2';
@@ -16,7 +16,7 @@ const listarInventarios = async () => {
       text:'Cargando...'  
  });
  Swal.showLoading();
-     const {data} = await getInventario();
+     const {data} = await getInventarios();
      console.log(data)
      setInventarios(data);
      Swal.close();
@@ -36,7 +36,7 @@ const handleOpenModal = () =>{
 
   return (
        <div className="container-fluid">
-           <div className=" mt-2 mb-2 row row-cols-1 row-cols-md-4 g-4 mt-2 mb-2">
+           <div className="mt-2 mb-2 row row-cols-1 row-cols-md-4 g-4 mt-2 mb-2">
              {
                 inventarios.map((inventario) => {
                   return <Inventariocard key={inventario._id} inventario={ inventario }/>

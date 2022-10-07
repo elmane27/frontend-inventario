@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { getInventarioporId, editInventario } from '../../services/inventarioService';
+import dayjs from 'dayjs';
+import {    
+    getInventario,
+    updateInventario
+} from '../../services/inventarioService';
 import { getUsuarios } from '../../services/usuarioService';
 import { getMarcas } from '../../services/marcaService';
 import { getTiposEquipos } from '../../services/tipoEquipoService';
@@ -9,325 +13,268 @@ import Swal from 'sweetalert2';
 
 export const InventarioUpdate = () => {
 
-    const  { inventarioId = '' } = useParams();
-    const [ inventario, setInventario ] = useState({});
-    const [ valoresForma, setValoresForm ] = useState({});
+    const { id } = useParams();       
+    const [ inventario, setInventario ] = useState({
+        serial: "",
+        modelo: "",
+        descripcion: "",
+        foto: "",
+        color: "",
+        fechaCompra: "",
+        precio: 0,
+        usuario: "",
+        marca: "",
+        tipoEquipo: "",
+        estadoEquipo: ""
+    });
+
+    //const [ valoresForma, setValoresForm ] = useState({});
     const [ usuarios, setUsuarios ] = useState([]);
     const [ marcas, setMarcas ] = useState([]);
     const [ tipos, setTipos ] = useState([]);
     const [ estados, setEstados ] = useState([]);
 
-    const { serial = '', modelo = '', descripcion = '', color = '', foto = '', 
-            fechaCompra = '', precio = '', usuario, marca, tipoEquipo, estadoEquipo } = valoresForma;
+    const no_image = "https://www.colombianosune.com/sites/default/files/asociaciones/NO_disponible-43_7.jpg";
 
     const listarUsuario = async () => {
-              try {
-                   const { data } = await getUsuarios();
-                   setUsuarios(data);
-               } catch (eror) {
-                   console.log(eror);
-               }
-             }
+        try {
+            const { data } = await getUsuarios();
+            setUsuarios(data);
+        } catch (eror) {
+            console.log(eror);
+        }
+    }
     
     useEffect(() => {
-              listarUsuario();
-         },[]);   
+        listarUsuario();
+    },[]);   
     
     const listarMarcas = async () => {
-              try {
-                   const { data } = await getMarcas();
-                   setMarcas(data);
-               } catch (eror) {
-                   console.log(eror);
-               }
-         }
+        try {
+            const { data } = await getMarcas();
+            setMarcas(data);
+        } catch (eror) {
+            console.log(eror);
+        }
+    }
     
     useEffect( () => {
-            listarMarcas();
-         },[]);
+        listarMarcas();
+    },[]);
              
     const listarTipos = async () => {
-              try {
-                   const { data } = await getTiposEquipos();
-                   setTipos(data);
-               } catch (eror) {
-                   console.log(eror);
-               } 
-         }
+        try {
+            const { data } = await getTiposEquipos();
+            setTipos(data);
+        } catch (eror) {
+            console.log(eror);
+        } 
+    }
     
-         useEffect(() => {
-            listarTipos();
-         },[]);
+    useEffect(() => {
+        listarTipos();
+    },[]);
              
     const listarEstados = async () => {
-              try {
-                   const { data } = await getEstadosEquipos();
-                   setEstados(data);
-               } catch (eror) {
-                   console.log(eror);
-               }
-         }
+        try {
+            const { data } = await getEstadosEquipos();
+            setEstados(data);
+        } catch (eror) {
+            console.log(eror);
+        }
+    }
     
     useEffect(() => {
-              listarEstados();
-         },[]);        
-
-     const getInventario = async () => {
-          try {
-              Swal.fire({
-                  allowOutsideClick: false,
-                  text:'Cargando...'  
-               });
-               Swal.showLoading();
-               const { data } = await getInventarioporId(inventarioId);
-               console.log(data);
-               setInventario(data);
-               Swal.close();
-          } catch (eror) {
-               console.log(eror);
-               Swal.close();
-          }
-}
-
-    useEffect (() => {
-        getInventario();
+        listarEstados();
     },[]);
+    
+    const mostrarInventario = async () => {
+        try {
+            Swal.fire({
+                allowOutsideClick: false,
+                text:'Cargando...'  
+            });
+            Swal.showLoading();
+            const { data } = await getInventario(id);                    
+            setInventario(data);
+            Swal.close();
+        } catch (eror) {
+            console.log(eror);
+            Swal.close();
+        }
+    }
 
     useEffect(() => {
-          setValoresForm({
-               serial: inventario.serial,
-               modelo: inventario.modelo,
-               descripcion: inventario.descripcion,
-               color: inventario.color,
-               foto: inventario.foto,
-               fechaCompra: inventario.fechaCompra,
-               precio: inventario.precio,
-               usuario: inventario.usuario,
-               marca: inventario.marca,
-               tipoEquipo: inventario.tipoEquipo,
-               estadoEquipo: inventario.estadoEquipo,
-          });         
-    }, [ inventario ]);
+        mostrarInventario();
+    }, []);
 
-    const handleOnChange = ({ target}) => {
-      const { name, value } = target;
-      setValoresForm({...valoresForma, [name]: value}); // spreed
+    const handleOnChange = ( event ) => {                        
+        setInventario({
+            ...inventario,
+            [event.target.name]: event.target.value,    
+        });
     }
 
     const handleOnSubmit = async (e) => {
-      e.preventDefault();
-      const inventario = {
-        serial, modelo, descripcion, color, foto, 
-        fechaCompra, precio, 
-        usuario: {
-          _id: usuario
-        },
-        marca: {
-           _id: marca
-        },
-        tipoEquipo: {
-          _id: tipoEquipo
-        },
-        estadoEquipo: {
-          _id: estadoEquipo
+        e.preventDefault();
+        console.log(inventario)        
+        try {
+            Swal.fire({
+                allowOutsideClick: false,
+                text:'Cargando...'  
+            });
+            Swal.showLoading();            
+            const { data } = await updateInventario(id, inventario);            
+            Swal.fire('Actualizado', 'Inventario actualizado con exito', 'success');
+            console.log(data.msg);
+            //window.location.href = "/inventarios";            
+        } catch (eror) {
+            console.log(eror);
+            Swal.fire('Error', 'Error al actualizar el inventario', 'error');
         }
-   }
-    
-   try {
-        Swal.fire({
-            allowOutsideClick: false,
-            text:'Cargando...'  
-         });
-          Swal.showLoading();
-          const { data } = await editInventario( inventarioId,inventario );
-          console.log(data);
-          Swal.close();
-     } catch (eror) {
-          console.log(eror);
-          console.log(eror.response.data);
-          /*
-          Swal.close();
-          let mensaje;
-          if (eror && eror.response && eror.response.data) {
-              mensaje = eror.response.data;
-          } else {
-               mensaje = 'Ocurrio un error','Por favor verifique los datos';
-          }
-          Swal.fire('Error', mensaje, 'error');*/
-  }
    
     }
 
-  return (
-     <div className='container-fluidmt-3 mb-2 '>
-      <div className='card'>
-        <div className='card-header'>
-          <h5 className='card-title'>Detalle activo</h5>
-        </div>
-        <div className='card-body'>
-          <div className='row'>
-            <div className='col-md-3'>
-            <img src={inventario.foto} />             
-            </div>
+    return (
+        <div className='container-fluidmt-3 mb-2'>
+            <div className='card'>
+                <div className='card-header'>
+                    <h5 className='card-title'>Detalle activo</h5>
+                </div>
+                <div className='card-body'>
+                    <div className='row'>                        
+                        <div className='col-md-3'>
+                            <img src={ inventario.foto || no_image } className='img-fluid' alt='...' />             
+                        </div>
 
-            <div className='col-md-9'>
-              <form onSubmit={(e) => handleOnSubmit(e)}>
-                      <div className='row'>
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Serial</label>
-                                  <input type="text"  name="serial" value={serial} onChange={ (e) => handleOnChange(e) } className="form-control" required/>
-                                  
-                              </div>
-                          </div>
+                        <div className='col-md-9'>
+                            <form onSubmit={(e) => handleOnSubmit(e)}>                                
+                                <div className='row'>
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Serial</label>
+                                            <input type="text"  name="serial" value={inventario.serial} onChange={ (e) => handleOnChange(e) } className="form-control" required/>
+                                        </div>
+                                    </div>
 
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Modelo</label>
-                                  <input type="text" name="modelo" value={modelo}  onChange={ (e) => handleOnChange(e) } className="form-control" required/>
-                                  
-                              </div>                        
-                         </div> 
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Modelo</label>
+                                            <input type="text" name="modelo" value={inventario.modelo}  onChange={ (e) => handleOnChange(e) } className="form-control" required/>
+                                        </div>                        
+                                    </div> 
 
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Descripcion</label>
-                                  <input type="text" name="descripcion"  value={descripcion} onChange={ (e) => handleOnChange(e) } className="form-control" required/>
-                                  
-                              </div>
-                          </div> 
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Color</label>
-                                  <input type="text" name="color" value={color} onChange={ (e) => handleOnChange(e) }className="form-control" required/>
-                                  
-                              </div>
-                          </div> 
-                      </div>
-                      <div className='row'>
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Foto</label>
-                                  <input type="url"  name="foto" value={foto}  onChange={ (e) => handleOnChange(e) }className="form-control" required/>
-                                  
-                              </div>
-                          </div>
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Descripcion</label>
+                                            <input type="text" name="descripcion"  value={inventario.descripcion} onChange={ (e) => handleOnChange(e) } className="form-control" required/>                                            
+                                        </div>
+                                    </div> 
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Color</label>
+                                            <select name="color" value={inventario.color} onChange={ (e) => handleOnChange(e) } className="form-select" required>
+                                                <option value="">Seleccione un color</option>
+                                                <option value="Rojo">&#x1F534; Rojo</option>
+                                                <option value="Verde">&#x1F7E2; Verde</option>
+                                                <option value="Amarillo">&#x1F7E1; Amarillo</option>
+                                                <option value="Azul">&#x1F535; Azul</option>
+                                                <option value="Morado">&#x1F7E3; Morado</option>
+                                                <option value="Naranja">&#x1F7E7; Naranja</option>
+                                                <option value="Marron">&#x1F7E4; Marron</option>
+                                                <option value="Gris"> Gris</option>
+                                                <option value="Blanco"> Blanco</option>
+                                                <option value="Negro"> Negro</option>
+                                                <option value="Otro">Otro</option>
+                                            </select>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div className='row'>
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Url Foto</label>
+                                            <input type="url"  name="foto" value={inventario.foto}  onChange={ (e) => handleOnChange(e) }className="form-control" required/>                                            
+                                        </div>
+                                    </div>
 
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Fecha Compra</label>
-                                  <input type="date" name="fechaCompra" value={fechaCompra} onChange={ (e) => handleOnChange(e) } className="form-control" required/>
-                                  
-                              </div>
-                          </div> 
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Fecha Compra</label> 
+                                            <input type="date" name="fechaCompra" value={ dayjs(inventario.fechaCompra).format('YYYY-MM-DD') } onChange={ (e) => handleOnChange(e) } className="form-control" required/>
+                                        </div>
+                                    </div> 
 
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Precio</label>
-                                  <input type="number" name="precio" value={precio} onChange={ (e) => handleOnChange(e) } className="form-control" required/>
-                                  
-                              </div>
-                          </div> 
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Usuario</label>
-                                  <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="usuario" value={usuario} required>
-                                      <option value="">--SELECCIONAR USUARIO-</option>
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Precio</label>
+                                            <div className="input-group mb-3">
+                                                <span className="input-group-text">$</span>
+                                                <input type="number" name="precio" value={inventario.precio} onChange={ (e) => handleOnChange(e) } className="form-control" required/>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Usuario</label>
+                                            <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="usuario" value={inventario.usuario._id} required>
+                                                <option value="">--SELECCIONAR USUARIO--</option>
+                                                { usuarios.map( usuario => (
+                                                    <option key={usuario._id} value={usuario._id}>{usuario.nombre}</option>
+                                                )) }
+                                            </select>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div className='row'>
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Marca</label>
+                                            <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="marca" value={inventario.marca._id} required>
+                                                <option value="">--SELECCIONAR MARCA--</option>
+                                                { marcas.map( marca => (
+                                                    <option key={marca._id} value={marca._id}>{marca.nombre}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div>
 
-                                      {
-                                          usuarios.map(({_id, nombre}) => {
-                                              return(
-                                                  <option key={_id} value={_id}>
-                                                      {
-                                                          nombre
-                                                      }
-                                                  </option>
-                                              )
-                                          })
-                                      }
-                                  </select>
-                                  
-                              </div>
-                          </div> 
-                      </div>
-                      <div className='row'>
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Marca</label>
-                                  <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="marca" value={marca} required>
-                                      <option value="">--SELECCIONAR MARCA--</option>
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Tipo Equipo</label>
+                                            <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="tipoEquipo" value={inventario.tipoEquipo._id} required>
+                                                <option  value="">--SELECCIONAR TIPO EQUIPO--</option>
+                                                { tipos.map( tipo => (
+                                                    <option key={tipo._id} value={tipo._id}>{tipo.nombre}</option>
+                                                ))}
+                                            </select>                                            
+                                        </div>
+                                    </div> 
 
-                                      {
-                                          marcas.map(({_id, nombre}) => {
-                                              return(
-                                                  <option key={_id} value={_id}>
-                                                      {
-                                                          nombre
-                                                      }
-                                                  </option>
-                                              )
-                                          })
-                                      }
-                                  </select>
-                              </div>
-                          </div>
-
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Tipo Equipo</label>
-                                  <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="tipoEquipo" value={tipoEquipo} required>
-                                      <option  value="">--SELECCIONAR TIPO EQUIPO-</option>
-
-                                      {
-                                          tipos.map(({_id, nombre}) => {
-                                              return(
-                                                  <option key={_id} value={_id}>
-                                                      {
-                                                          nombre
-                                                      }
-                                                  </option>
-                                              )
-                                          })
-                                      }
-                                  </select>
-                                  
-                              </div>
-                          </div> 
-
-                          <div className='col'>
-                              <div className="mb-3">
-                                  <label className="form-label">Estado equipo</label>
-                                  <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="estadoEquipo" value={estadoEquipo} required>
-                                      <option  value="">--SELECCIONAR ESTADO EQUIPO-</option>
-
-                                      {
-                                          estados.map(({_id, nombre}) => {
-                                              return(
-                                                  <option key={_id} value={_id}>
-                                                      {
-                                                          nombre
-                                                      }
-                                                  </option>
-                                              )
-                                          })
-                                      }
-                                  </select>
-                                  
-                              </div>
-                          </div> 
-                      </div>
-                      <div className='row'>
-                          <div className='col'>
-                              <button className='btn btn-primary'>
-                                   Guardar
-                                </button>          
+                                    <div className='col'>
+                                        <div className="mb-3">
+                                            <label className="form-label">Estado equipo</label>
+                                            <select className="form-select" aria-label="Default select example" onChange={ (e) => handleOnChange(e) } name="estadoEquipo" value={inventario.estadoEquipo._id} required>
+                                                <option  value="">--SELECCIONAR ESTADO EQUIPO--</option>
+                                                { estados.map( estado => (
+                                                    <option key={estado._id} value={estado._id}>{estado.nombre}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                    </div> 
+                                </div>
+                                <div className='row'>
+                                    <div className='col'>
+                                        <button className='btn btn-primary'>
+                                            Guardar
+                                        </button>          
                                     </div>
                                 </div>
-                           </form>        
-                      </div>
+                            </form>        
+                        </div>
+                    </div>
                 </div>
-           </div>
-       </div>
-    </div>
-  )
+            </div>
+        </div>
+    )
 }

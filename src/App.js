@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Switch, Route,  Redirect } from 'react-router-
 import { Header } from './components/iud/Header';
 import { EstadoView } from './components/estados/EstadoView';
 import { InventarioView } from './components/inventarios/InventarioView';
+import { InventarioUpdate } from './components/inventarios/InventarioUpdate';
 import { MarcaView } from './components/marcas/MarcaView';
 import { Tipoview } from './components/tipos/Tipoview';
 import { Usuarioview } from './components/usuarios/Usuarioview';
-import { InventarioUpdate } from './components/inventarios/InventarioUpdate';
 
 const App = () => {
     return <Router>
@@ -17,7 +17,8 @@ const App = () => {
             <Route exact path='/marcas' component={ MarcaView }/>
             <Route exact path='/estados' component={ EstadoView }/>
             <Route exact path='/tipos' component={ Tipoview }/>
-            <Route exact path='inventarios/edit:id/:inventarioId' component={InventarioUpdate} />
+            <Route exact path='/inventarios' component={InventarioView} />
+            <Route exact path='/inventarios/edit/:id' component={InventarioUpdate} />
             <Redirect to='/' />
         </Switch> 
     </Router>
