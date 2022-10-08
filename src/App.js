@@ -6,7 +6,7 @@ import { InventarioView } from './components/inventarios/InventarioView';
 import { InventarioUpdate } from './components/inventarios/InventarioUpdate';
 import { MarcaView } from './components/marcas/MarcaView';
 import { UsuarioView } from './components/usuarios/Usuarioview';
-import { TipoView } from './components/tipos/TipoView';
+import { TipoView } from './components/tipos/Tipoview';
 
 const App = () => {
     return <Router>
