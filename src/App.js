@@ -5,8 +5,8 @@ import { EstadoView } from './components/estados/EstadoView';
 import { InventarioView } from './components/inventarios/InventarioView';
 import { InventarioUpdate } from './components/inventarios/InventarioUpdate';
 import { MarcaView } from './components/marcas/MarcaView';
-import { TipoView } from './components/tipos/Tipoview';
 import { UsuarioView } from './components/usuarios/Usuarioview';
+import { TipoView } from './components/tipos/TipoView';
 
 const App = () => {
     return <Router>
