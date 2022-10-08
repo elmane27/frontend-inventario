@@ -68,6 +68,12 @@ export const MarcaView = () => {
                     timer: 1500,
                 });
                 getMarcasFromApi();
+                setMarca({
+                    _id: 0,
+                    nombre: "",
+                    estado: "Activo",
+                });
+                setModo("crear");
             }                    
         }
     };
@@ -180,14 +186,10 @@ export const MarcaView = () => {
                                         <td>{marca.nombre}</td>
                                         <td>{marca.estado}</td>
                                         <td>
-                                            {dayjs(marca.fechaCreacion).format(
-                                                "DD/MM/YYYY"
-                                            )}
+                                            {dayjs(marca.fechaCreacion).format("DD/MM/YYYY")}
                                         </td>
                                         <td>
-                                            {dayjs(
-                                                marca.fechaActualizacion
-                                            ).format("DD/MM/YYYY")}
+                                            {dayjs(marca.fechaActualizacion).format("DD/MM/YYYY")}
                                         </td>
                                         <td>
                                             <button className="btn btn-primary mx-2" onClick={() => {

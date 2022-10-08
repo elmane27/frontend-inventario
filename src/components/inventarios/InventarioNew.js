@@ -97,8 +97,7 @@ export const InventarioNew = ({ handleOpenModal, listarInventarios }) => {
                     timer: 1500,
                 });
                 handleOpenModal();
-                listarInventarios();
-                window.location.href = "/inventarios";
+                listarInventarios();                
             } else {
                 console.log(response);
                 Swal.fire({

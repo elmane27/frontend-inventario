@@ -32,7 +32,7 @@ export const InventarioUpdate = () => {
     const [ usuarios, setUsuarios ] = useState([]);
     const [ marcas, setMarcas ] = useState([]);
     const [ tipos, setTipos ] = useState([]);
-    const [ estados, setEstados ] = useState([]);
+    const [ estados, setEstados ] = useState([]);    
 
     const no_image = "https://www.colombianosune.com/sites/default/files/asociaciones/NO_disponible-43_7.jpg";
 
@@ -88,43 +88,31 @@ export const InventarioUpdate = () => {
         listarEstados();
     },[]);
     
-    const mostrarInventario = async () => {
-        try {
-            Swal.fire({
-                allowOutsideClick: false,
-                text:'Cargando...'  
-            });
-            Swal.showLoading();
-            const { data } = await getInventario(id);                    
-            setInventario(data);
-            Swal.close();
-        } catch (eror) {
-            console.log(eror);
-            Swal.close();
-        }
+    const getInventarioFromApi = async () => {
+        const response = await getInventario(id);
+        console.log(response.data);
+        setInventario(response.data);
     }
 
     useEffect(() => {
-        mostrarInventario();
-    }, []);
+        getInventarioFromApi();
+    }, [id]);
 
     const handleOnChange = ( event ) => {                        
-        setInventario({
-            ...inventario,
-            [event.target.name]: event.target.value,    
-        });
+        const { name, value } = event.target;        
+        setInventario({ ...inventario, [name]: value });
     }
 
     const handleOnSubmit = async ( event ) => {
-        event.preventDefault();
+        event.preventDefault();        
         try {
             Swal.fire({
                 allowOutsideClick: false,
                 text:'Actulizando...'  
             });
-            Swal.showLoading();
-            const response = await updateInventario(inventario._id, inventario);
-            if (response.status === 200) {
+            Swal.showLoading();            
+            const response = await updateInventario(id, inventario);
+            if (response.status === 200 && response.data.ok) {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -132,6 +120,7 @@ export const InventarioUpdate = () => {
                     showConfirmButton: false,
                     timer: 1500
                 });
+                window.location.href = "/inventarios";
             } else {
                 Swal.fire({
                     position: 'center',

@@ -16,14 +16,6 @@ export const TipoView = () => {
         estado: "Activo",
     });
 
-    const limpiarFormulario = () => {
-        setTipo({
-            _id: 0,
-            nombre: "",
-            estado: "Activo",
-        });
-    }
-
     const [modo, setModo] = useState("crear");
 
     const getTiposFromApi = async () => {        
@@ -51,9 +43,13 @@ export const TipoView = () => {
                     title: "Tipo de equipo creado",
                     showConfirmButton: false,
                     timer: 1500,
+                });                
+                getTiposFromApi(); 
+                setTipo({
+                    _id: 0,
+                    nombre: "",
+                    estado: "Activo",
                 });
-                limpiarFormulario();
-                getTiposFromApi();                
             } else {
                 Swal.fire({
                     icon: "error",
@@ -70,9 +66,14 @@ export const TipoView = () => {
                     title: "Tipo de equipo actualizado",
                     showConfirmButton: false,
                     timer: 1500,
-                });
-                limpiarFormulario();
+                });                
                 getTiposFromApi();
+                setTipo({
+                    _id: 0,
+                    nombre: "",
+                    estado: "Activo",
+                });
+                setModo("crear");
             }                    
         }
     };
@@ -171,7 +172,7 @@ export const TipoView = () => {
                                 <tr>
                                     <th>#</th>
                                     <th>Nombre</th>
-                                    <th>Tipo</th>
+                                    <th>Estado</th>
                                     <th>Creación</th>
                                     <th>Actualización</th>
                                     <th>Acciones</th>
@@ -184,14 +185,10 @@ export const TipoView = () => {
                                         <td>{tipo.nombre}</td>
                                         <td>{tipo.estado}</td>
                                         <td>
-                                            {dayjs(tipo.fechaCreacion).format(
-                                                "DD/MM/YYYY"
-                                            )}
+                                            {dayjs(tipo.fechaCreacion).format("DD/MM/YYYY")}
                                         </td>
                                         <td>
-                                            {dayjs(
-                                                tipo.fechaActualizacion
-                                            ).format("DD/MM/YYYY")}
+                                            {dayjs(tipo.fechaActualizacion).format("DD/MM/YYYY")}
                                         </td>
                                         <td>
                                             <button className="btn btn-primary mx-2" onClick={() => {

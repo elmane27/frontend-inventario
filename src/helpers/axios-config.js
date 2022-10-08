@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosIntance = axios.create({
-    baseURL: 'https://app-backend-iud.herokuapp.com/'
+    baseURL: 'http://localhost:4000/'
 });
 
 export {

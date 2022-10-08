@@ -1,39 +1,39 @@
 import { axiosIntance } from '../helpers/axios-config';
 
 const getInventarios = () => {
-    return axiosIntance.get('inventario', {
+    return axiosIntance.get('/inventario', {
         headers: {
-            'content-type': 'aplicacion/json'
+            'content-type': 'aplicacion/json; charset=utf-8'
         }
     });
 }
 
 const getInventario = (id) => {
-    return axiosIntance.get(`inventario/${id}`, {
+    return axiosIntance.get(`/inventario/${id}`, {
         headers: {
-            'content-type': 'aplicacion/json'
+            'content-type': 'aplicacion/json; charset=utf-8'
         }
     });
 }
 
-const createInventario = async (data) => {
-    return axiosIntance.post('inventario', data, {
+const createInventario = async (inventario) => {
+    return axiosIntance.post('/inventario', inventario, {
         headers: {
-            'content-type': 'aplicacion/json; charset=utf-8;',            
+            'Content-Type': "application/json; charset=utf-8",           
         }
     });
 }
 
-const updateInventario = async (id, data) => {
-    return axiosIntance.put(`inventario/${id}`, data, {
+const updateInventario = async (id, inventario) => {
+    return axiosIntance.put(`/inventario/${id}`, inventario, {
         headers: {
-            'content-type': 'aplicacion/json; charset=utf-8;',
+            'Content-Type': "application/json; charset=utf-8",
         }
     });
 }
 
-const deleteInventario = (inventarioId) => {
-    return axiosIntance.delete(`inventario/${inventarioId}`,{
+const deleteInventario = (id) => {
+    return axiosIntance.delete(`inventario/${id}`,{
         headers: {
             'content-type': 'aplicacion/json'
         }
