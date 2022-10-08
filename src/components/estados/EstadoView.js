@@ -34,7 +34,7 @@ export const EstadoView = () => {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();        
-        if (modo == "crear") {
+        if (modo === "crear") {
             const response = await createEstado(estado);
             console.log(response.status)
             if (response.status === 200) {
@@ -45,8 +45,7 @@ export const EstadoView = () => {
                     showConfirmButton: false,
                     timer: 1500,
                 });                
-                getEstadosFromApi();
-                {/* Limpiar el formulario */}
+                getEstadosFromApi();                
                 setEstado({
                     _id: 0,
                     nombre: "",

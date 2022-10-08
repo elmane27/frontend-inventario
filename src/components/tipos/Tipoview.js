@@ -42,7 +42,7 @@ export const TipoView = () => {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();        
-        if (modo == "crear") {
+        if (modo === "crear") {
             const response = await createTipoEquipo(tipo);
             if (response.status === 200) {
                 Swal.fire({

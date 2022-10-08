@@ -34,7 +34,7 @@ export const MarcaView = () => {
 
     const handleFormSubmit = async (event) => {
         event.preventDefault();        
-        if (modo == "crear") {
+        if (modo === "crear") {
             const response = await createMarca(marca);            
             if (response.status === 200) {
                 Swal.fire({
