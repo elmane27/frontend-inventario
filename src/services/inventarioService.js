@@ -16,18 +16,18 @@ const getInventario = (id) => {
     });
 }
 
-const crearInventario = (data) => {
-    return axiosIntance.post('inventario',  data, {
+const createInventario = async (data) => {
+    return axiosIntance.post('inventario', data, {
         headers: {
-            'content-type': 'aplicacion/json'
+            'content-type': 'aplicacion/json; charset=utf-8;',            
         }
     });
 }
 
-const updateInventario = (id, data) => {
+const updateInventario = async (id, data) => {
     return axiosIntance.put(`inventario/${id}`, data, {
         headers: {
-            'content-type': 'aplicacion/json'
+            'content-type': 'aplicacion/json; charset=utf-8;',
         }
     });
 }
@@ -41,6 +41,6 @@ const deleteInventario = (inventarioId) => {
 }
 
 export {
-    getInventarios, getInventario, crearInventario, updateInventario, deleteInventario
+    getInventarios, getInventario, createInventario, updateInventario, deleteInventario
 }
 
